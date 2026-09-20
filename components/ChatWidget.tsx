@@ -28,6 +28,11 @@ export default function ChatWidget() {
       crn: CRN,
       chatOptions: {
         agentId: AGENT_ID,
+        onLoad: (instance: {
+          updateWelcomeScreen?: (config: Record<string, unknown>) => void;
+        }) => {
+          instance?.updateWelcomeScreen?.({ starterPrompts: [] });
+        },
       },
       style: {
         headerColor: "EC1E79",
@@ -42,17 +47,7 @@ export default function ChatWidget() {
     script.src = `${HOST_URL}/wxochat/wxoLoader.js?embed=true`;
     script.addEventListener("load", () => {
       // @ts-expect-error — injetado pelo script do watsonx Orchestrate
-      const result = window.wxoLoader?.init();
-      const clearStarterPrompts = (instance: {
-        updateWelcomeScreen?: (config: Record<string, unknown>) => void;
-      }) => {
-        instance?.updateWelcomeScreen?.({ starterPrompts: [] });
-      };
-      if (result && typeof result.then === "function") {
-        result.then(clearStarterPrompts);
-      } else if (result) {
-        clearStarterPrompts(result);
-      }
+      window.wxoLoader?.init();
     });
     document.head.appendChild(script);
   }, []);
