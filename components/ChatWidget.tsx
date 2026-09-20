@@ -6,8 +6,6 @@ import { MessageCircle } from "lucide-react";
 // Integração oficial do "Web Channel" do watsonx Orchestrate (chat embutido).
 // As credenciais NÃO ficam no código — vêm de variáveis de ambiente
 // públicas (NEXT_PUBLIC_*), configuradas no painel da Vercel.
-// Veja o README para o passo a passo de como obter cada valor dentro
-// do watsonx Orchestrate (Settings → Integrations → Webchat).
 declare global {
   interface Window {
     wxOConfiguration?: Record<string, unknown>;
@@ -34,6 +32,15 @@ export default function ChatWidget() {
       chatOptions: {
         agentId: AGENT_ID,
       },
+      // Cores da marca ReUse aplicadas ao widget (rosa), em vez do azul
+      // padrão da IBM — opção documentada e suportada pelo watsonx
+      // Orchestrate, sem CSS por fora.
+      style: {
+        headerColor: "EC1E79",
+        primaryColor: "EC1E79",
+        userMessageBackgroundColor: "EC1E79",
+        showBackgroundGradient: false,
+      },
     };
 
     const script = document.createElement("script");
@@ -46,9 +53,6 @@ export default function ChatWidget() {
     document.head.appendChild(script);
   }, []);
 
-  // Se as variáveis de ambiente ainda não foram configuradas, mostra um
-  // botão flutuante "de exemplo" — assim o motion design/UI do chat já
-  // fica visível mesmo antes de ligar o watsonx Orchestrate de verdade.
   if (!isConfigured) {
     return (
       <button
